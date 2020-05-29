@@ -61,16 +61,18 @@
         let event = await getEvent(id);
         console.log(event);
             eventsDiv.innerHTML += `
-                <div class="col-3">
-                    <div class="card">
-                        <img class="card-img-top" src="${event.imageUrl}" alt="${event.name}">
-                        <div class="card-body">
-                            <h5 class="card-title">${event.name}</h5>
-                            <p class="card-text">${event.description}</p>
-                            <a href="#" id="delete" class="btn btn-primary">Delete</a>
-                            <a href="D7back.html?id=${event._id}" id="edit" class="btn btn-primary">Edit</a>
-                        </div>
-                    </div>
+                <div class="col-4">
+                  <img src="${event.imageUrl}" alt="${event.name}">
+                </div>
+                <div class="col-4 d-flex align-self-center flex-column">
+                    <h5 class="card-title">${event.name}</h5>
+                    <p class="card-text">${event.description}</p>
+                </div>
+                <div class="col-4 d-flex flex-column justify-content-center">
+                  <div class="d-flex flex-column justify-content-around w-100 h-50">
+                    <a href="#" id="delete" class="btn btn-primary w-50">Delete</a>
+                    <a href="D7back.html?id=${event._id}" id="edit" class="btn btn-primary w-50">Edit</a>
+                  </div>
                 </div>`;
             document.getElementById("delete"). addEventListener("click", handleDelete);
           
