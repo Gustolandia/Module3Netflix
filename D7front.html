@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body{
+        background-color: grey!important;
+      }
+      h1{
+        color:red;
+        text-align: left;
+        margin-bottom: 3rem!important;
+      }
+      .card-body{
+        display: none;
+      }
+      .card{
+        cursor: pointer;
+        border-color: grey !important;
+      }
+      .card:hover{
+        transform: scale(1.1);
+        z-index: 1000;
+        border-color: black !important;
+        color: white;
+      }
+      .card:hover .card-body{
+        display: block;
+        background-color:black;
+
+      }
+      .row{
+        padding-bottom: 7rem;
+      }
+
+    </style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+
+    <title>New Netflix</title>
+  </head>
+  <body>
+    <nav style="background-color:black!important;" class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#"><img style="height:3rem;" src="https://assets.brand.microsites.netflix.io/assets/493f5bba-81a4-11e9-bf79-066b49664af6_cm_1440w.png?v=3"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="D7back.html">Back</a>
+            </li>
+          </ul>
+        </div>
+    </nav>
+    <div class="wait d-none" style="z-index: 1; background-color: black; position: absolute;width: 100%;height: 100%;opacity: 50%;">
+      <div style="width: 6rem; height: 6rem;position:relative;left: 50%;top: 50%;">
+        <span class="spinner-border text-warning" style="width: 100%; height: 100%;"role="status"></span>
+        <span style="position:relative;left:15%;top: -65%;color: white;">Loading...</span>
+      </div>  
+    </div>
+    <div class="mainPage container text-center my-4">
+
+    </div>
+    <script src="./helper.js"></script>
+    <script>
+      window.onload = async () => {
+        let mainPage= document.querySelector(".mainPage");
+        let waitScreen= document.querySelector(".wait");
+        let cats = await getEvents();
+        console.log(cats);
+        for(k=0;k<cats.length;k++){
+          let events= await getMovies(cats[k]);
+          console.log(events);
+          let eventsT=document.createElement("h1");
+          eventsT.innerText=cats[k];
+          mainPage.appendChild(eventsT);
+          let eventsDiv=document.createElement("div");
+          eventsDiv.className="row"
+          mainPage.appendChild(eventsDiv);
+          
+          
+        
+        if (events.length > 0) {
+          let iii=0
+          events.forEach((e) => {
+             eventsDiv.innerHTML+= `
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-0">
+                    <div class="card">
+                        <img style="height:20rem; box-sizing: border-box!important;" class="card-img-top" src="${e.imageUrl}" alt="${e.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${e.name}</h5>
+                            <a href="#" class="btn btn-primary">Details <span class="d-none">${iii}</span></a>
+                        </div>
+                    </div>
+                </div>`;
+            iii+=1
+            
+          });
+          let buttons=document.querySelectorAll(".btn-primary");
+          for(i=0;i<buttons.length;i++){
+            buttons[i].addEventListener("click", function(e){
+                    waitScreen.classList.toggle("d-none");
+                    let j=e.target.querySelector(".d-none").innerText;
+                    let s="D8details.html?id="+(events[j]._id);
+                    setTimeout(function(){location.assign(s)},1000); 
+                  })
+          }
+
+        } else {
+          eventsDiv.innerHTML = "<h1>No added items</h1>";
+        }
+      }
+      };
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
