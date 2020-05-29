@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body{
+        background-color: grey !important;
+      }
+    </style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+
+    <title>New Netflix</title>
+  </head>
+  <body>
+    <nav style="background-color:black!important;" class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#"><img style="height:3rem;" src="https://assets.brand.microsites.netflix.io/assets/493f5bba-81a4-11e9-bf79-066b49664af6_cm_1440w.png?v=3"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="D7front.html">Home<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="D7back.html">Back</a>
+            </li>
+          </ul>
+        </div>
+    </nav>
+    <div class="container text-center">
+      <h2 class="mt-5">
+        My Movie Details
+      </h2>
+      <div id="eventsDiv">
+            <div class="row">
+                <!-- empty at load -->
+            </div>
+      </div>
+    </div>
+    <script src="./helper.js"></script>
+    <script>
+    let id='';
+      window.onload = async () => {
+        let eventsDiv = document.querySelector(".row");
+        let urlParams = new URLSearchParams(window.location.search);
+        id = urlParams.get("id");
+        let event = await getEvent(id);
+        console.log(event);
+            eventsDiv.innerHTML += `
+                <div class="col-3">
+                    <div class="card">
+                        <img class="card-img-top" src="${event.imageUrl}" alt="${event.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${event.name}</h5>
+                            <p class="card-text">${event.description}</p>
+                            <a href="#" id="delete" class="btn btn-primary">Delete</a>
+                            <a href="D7back.html?id=${event._id}" id="edit" class="btn btn-primary">Edit</a>
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById("delete"). addEventListener("click", handleDelete);
+          
+
+      };
+      const handleDelete = async () => {
+        // delete operation, I will need the id
+        const response = await deleteEvent(id);
+        if (response.ok) {
+            let eventsDiv = document.querySelector(".row");
+            eventsDiv.innerHTML = `<h1 style="color:red;">Product deleted - this page will redirect you - please wait</h1>`
+            setTimeout(function() {
+                location.assign("D7front.html");
+            }, 2000); 
+        } else {
+            alert("Product has NOT been deleted successfully");
+        }
+      };
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
