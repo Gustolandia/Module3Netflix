@@ -126,7 +126,7 @@
           let buttons=document.querySelectorAll(".btn-primary");
           for(i=0;i<buttons.length;i++){
             buttons[i].addEventListener("click", function(e){
-                    waitScreen.classList.toggle("d-none");
+                    waitScreen.classList.remove("d-none");;
                     let j=e.target.querySelector(".d-none").innerText;
                     let s="D8details.html?id="+(events[j]._id);
                     setTimeout(function(){location.assign(s)},1000); 
