@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: grey !important;
+      }
+    </style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+
+    <title>Backend Netflix</title>
+  </head>
+  <body>
+    <nav style="background-color:black!important;" class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#"><img style="height:3rem;" src="https://assets.brand.microsites.netflix.io/assets/493f5bba-81a4-11e9-bf79-066b49664af6_cm_1440w.png?v=3"></a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="D7front.html">Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#"
+              >Back<span class="sr-only">(current)</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container text-center">
+      <h1 style="color:red;">Netflix</h1>
+      <h1 style="color:red;">BACKOFFICE</h1>
+      <h2 class="mt-5">Add a New Movie</h2>
+      <div class="row">
+        <div class="col col-md-6 offset-md-3">
+          <form onsubmit="handleSubmit()">
+            <div class="form-group mt-5">
+              <label for="name">Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="Input here the name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                class="form-control"
+                id="description"
+                rows="4"
+                placeholder="Input here the description"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="category">Category</label>
+              <input
+                type="text"
+                class="form-control"
+                id="category"
+                placeholder="Input here the category"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="image">Image</label>
+              <input
+                type="url"
+                class="form-control"
+                id="image"
+                placeholder="Input url image"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary mt-4" type="submit">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="./helper.js"></script>
+    <script>
+      let id;
+
+      window.onload = async () => {
+        let urlParams = new URLSearchParams(window.location.search);
+        id = urlParams.get("id");
+
+        if (id) {
+          let event = await getEvent(id);
+          document.querySelector("#name").value = event.name;
+          document.querySelector("#description").value = event.description;
+          document.querySelector("#category").value = event.category;
+          document.querySelector("#image").value = event.imageUrl;
+        } 
+      };
+      handleSubmit = () => {
+        event.preventDefault();
+        submitEvent();
+      };
+
+
+      submitEvent = async () => {
+        let myEvent = {
+          // {
+          //       "_id": "5d318e1a8541744830bef139", //SERVER GENERATED
+          //       "name": "app test 1",  //REQUIRED
+          //       "description": "somthing longer", //REQUIRED
+          //       "brand": "nokia", //REQUIRED
+          //       "imageUrl": "https://drop.ndtv.com/TECH/product_database/images/2152017124957PM_635_nokia_3310.jpeg?downsize=*:420&output-quality=80", //REQUIRED
+          //       "price": 100, //REQUIRED
+          //       "userId": "admin", //SERVER GENERATED
+          //       "createdAt": "2019-07-19T09:32:10.535Z", //SERVER GENERATED
+          //       "updatedAt": "2019-07-19T09:32:10.535Z", //SERVER GENERATED
+          //       "__v": 0 //SERVER GENERATED
+          //   }
+          name: document.querySelector("#name").value,
+          description: document.querySelector("#description").value,
+          category: document.querySelector("#category").value,
+          imageUrl: document.querySelector("#image").value,
+        };
+        if (id) {
+          let response = await editEvent(id,myEvent);
+          console.log("RESPONSE FROM THE editEvent", response);
+          if (response.ok) {
+            let eventsDiv = document.querySelector(".row");
+              eventsDiv.innerHTML = `<h1 style="color:red;">Product edited - this page will redirect you - please wait</h1>`
+              setTimeout(function() {
+                location.assign("D7front.html");
+              }, 3000); 
+          } else {
+            alert("Product NOT edited succesfully");
+          }
+        } else{
+          let response = await saveEvent(myEvent);
+          console.log("RESPONSE FROM THE saveEvent", response);
+          if (response.ok) {
+            let eventsDiv = document.querySelector(".row");
+              eventsDiv.innerHTML = `<h1 style="color:red;">Product created - this page will redirect you - please wait</h1>`
+              setTimeout(function() {
+                  location.assign("D7front.html");
+              }, 3000); 
+          } else {
+            alert("Product NOT created succesfully");
+          }
+        }
+      };
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
